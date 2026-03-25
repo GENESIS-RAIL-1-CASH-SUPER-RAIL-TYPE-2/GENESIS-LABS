@@ -6,6 +6,7 @@
 
 import express from "express";
 import { LabsService } from "./services/labs.service";
+import { BacklogService } from "./services/backlog.service";
 import type { DarpaWorkOrderPayload, DefensiveThreatPayload } from "./types";
 
 const app = express();
@@ -25,6 +26,7 @@ const RED_TEAM_URL = process.env.RED_TEAM_URL || "http://genesis-red-aggressor:8
 const ACADEMY_URL = process.env.ACADEMY_URL || "http://genesis-academy:8730";
 
 const labs = new LabsService();
+const backlog = new BacklogService();
 
 // ═══════════════════════════════════════════════════════════════════════
 // ENDPOINTS
@@ -135,8 +137,9 @@ app.post("/task/:id/release", (req, res) => {
   if (!weapon) return res.status(400).json({ error: "Task not found or not in CLEARED status" });
 
   labs.distributeWeapon(weapon);
-  console.log(`[LABS] WEAPON RELEASED: ${weapon.weaponId} — ${weapon.name} [${weapon.category}]`);
-  res.status(201).json(weapon);
+  const graduated = backlog.checkWeaponMatch(weapon);
+  console.log(`[LABS] WEAPON RELEASED: ${weapon.weaponId} — ${weapon.name} [${weapon.category}]${graduated ? ` (graduated backlog ${graduated.id})` : ""}`);
+  res.status(201).json({ weapon, graduated });
 });
 
 app.post("/task/:id/pipeline", async (req, res) => {
@@ -254,6 +257,45 @@ app.get("/provenance/:taskId", (req, res) => {
   res.json(provenance);
 });
 
+// ── Weapons Development Backlog ──────────────────────────────────────
+// Mirror of WEAPONS_DEVELOPMENT.md — Labs permanently monitors and depletes.
+
+app.get("/backlog", (_req, res) => {
+  res.json({ entries: backlog.getAll(), stats: backlog.getStats() });
+});
+
+app.get("/backlog/:id", (req, res) => {
+  const entry = backlog.get(req.params.id);
+  if (!entry) return res.status(404).json({ error: "Backlog entry not found" });
+  res.json(entry);
+});
+
+app.post("/backlog/add", (req, res) => {
+  if (!LABS_ENABLED) return res.status(503).json({ error: "Labs disabled" });
+  const { title, origin, concept, blocker, prerequisites, priority, estimatedLift } = req.body;
+  if (!title || !concept || !blocker) {
+    return res.status(400).json({ error: "Missing title, concept, or blocker" });
+  }
+  const entry = backlog.add({ title, origin: origin || "Manual", concept, blocker, prerequisites: prerequisites || [], priority: priority || "MEDIUM", estimatedLift: estimatedLift || "TBD" });
+  console.log(`[LABS] Backlog entry added: ${entry.id} — ${entry.title}`);
+  res.status(201).json(entry);
+});
+
+app.post("/backlog/:id/promote", (req, res) => {
+  if (!LABS_ENABLED) return res.status(503).json({ error: "Labs disabled" });
+  const entry = backlog.promote(req.params.id);
+  if (!entry) return res.status(404).json({ error: "Entry not found or already deployed" });
+  console.log(`[LABS] Backlog entry promoted: ${entry.id} → FORGE_READY`);
+  res.json(entry);
+});
+
+app.post("/backlog/scan", (_req, res) => {
+  if (!LABS_ENABLED) return res.status(503).json({ error: "Labs disabled" });
+  const result = backlog.scan();
+  console.log(`[LABS] Manual backlog scan: ${result.total} entries (${result.backlog} backlog, ${result.forgeReady} forge-ready, ${result.deployed} deployed)`);
+  res.json(result);
+});
+
 // ═══════════════════════════════════════════════════════════════════════
 // PATROL LOOPS
 // ═══════════════════════════════════════════════════════════════════════
@@ -314,6 +356,18 @@ setInterval(() => {
   });
 }, 30 * 60 * 1000);
 
+// 4. Backlog Constraint Monitor — every 5 minutes
+// Scans WEAPONS_DEVELOPMENT.md mirror for constraint changes
+setInterval(() => {
+  if (!LABS_ENABLED) return;
+  const result = backlog.scan();
+  if (result.forgeReady > 0) {
+    console.log(`[LABS] Backlog scan: ${result.forgeReady} entries FORGE-READY — constraints lifted!`);
+    fire(GTC_URL, "/ingest", { source: "GENESIS_LABS", type: "BACKLOG_CONSTRAINT_LIFTED", data: { forgeReady: result.forgeReady, total: result.total } });
+    fire(DARPA_URL, "/intel/from-cia", { source: "GENESIS_LABS", type: "BACKLOG_FORGE_READY", data: { forgeReady: result.forgeReady } });
+  }
+}, 5 * 60 * 1000);
+
 // ═══════════════════════════════════════════════════════════════════════
 // BOOT
 // ═══════════════════════════════════════════════════════════════════════
@@ -328,6 +382,8 @@ app.listen(PORT, () => {
   console.log("[LABS] Dropbox Protocol: 5 AI slots + deterministic referee");
   console.log("[LABS] Contradiction Mining: ECHO slot (always)");
   console.log(`[LABS] Source Profiles: ${labs.getSourceProfiles().length} seeded`);
+  console.log(`[LABS] Weapons Development Backlog: ${backlog.getAll().length} entries (mirror of WEAPONS_DEVELOPMENT.md)`);
+  console.log("[LABS] Endpoints: 25 (20 forge + 5 backlog) | Loops: 4 (3 forge + 1 backlog)");
   console.log("[LABS] \"Their apple, our X. We NEVER copy.\"");
   console.log("═══════════════════════════════════════════════════════════════");
   console.log("");

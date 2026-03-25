@@ -260,3 +260,26 @@ export interface DefensiveThreatPayload {
   sourceName: string;
   severity: "CRITICAL" | "HIGH" | "MEDIUM" | "LOW";
 }
+
+// ── Weapons Development Backlog ───────────────────────────────────────
+// Mirror of WEAPONS_DEVELOPMENT.md — persistent backlog of unbuildable ideas.
+// Labs monitors constraints and depletes entries as they become buildable.
+
+export type BacklogPriority = "HIGH" | "MEDIUM" | "LOW";
+export type BacklogStatus = "BACKLOG" | "CONSTRAINT_LIFTING" | "FORGE_READY" | "DEPLOYED";
+
+export interface BacklogEntry {
+  id: string;                         // e.g. "WD-001"
+  title: string;
+  origin: string;                     // Where the idea came from
+  concept: string;                    // What it does
+  blocker: string;                    // Why it can't be built today
+  prerequisites: string[];            // Services/infra required
+  priority: BacklogPriority;
+  status: BacklogStatus;
+  estimatedLift: string;              // What needs to happen for constraint to lift
+  addedAt: string;
+  lastCheckedAt: string;
+  deployedAt: string | null;
+  deployedWeaponId: string | null;    // Links to Weapons Catalogue when graduated
+}
