@@ -440,6 +440,53 @@ const SEED_ENTRIES: Omit<BacklogEntry, "lastCheckedAt">[] = [
     deployedWeaponId: null,
   },
 
+  // ── Spark #005 — Adaptive Camouflage (Grok, 3 alien lenses: Noble/GHOSTHOOD/Miranda) ──
+  {
+    id: "WD-032",
+    title: "Klingon V3 — Continuous Adaptive Noise (Noble Sig-Weave)",
+    origin: "Spark #005 — Adaptive Camouflage — Noble Biomaterials/Jeff Keane lens (Grok, 2026-03-26). SPARK-005.",
+    concept: "Replace Klingon's 6 static noise mimicry templates with continuous adaptive terrain-matching. Live KL-divergence minimisation against current background distribution. The bot's statistical footprint becomes a 'living fabric' that self-adjusts to match the prevailing market microstructure at every instant. Noble Biomaterials doctrine: the material senses its environment and self-modifies to blend.",
+    blocker: "GPU Phase 2 for real-time KL-divergence computation across full order-flow distribution. Phase 0 could approximate with binned distributions on CPU.",
+    prerequisites: ["Klingon Cloaking V2.1 (8842)", "Sig-Nullifier (8852)", "Mirror Feed (8850)", "NVIDIA Phase 2B (full mode)"],
+    priority: "HIGH",
+    status: "BACKLOG",
+    deploymentClasses: ["STEALTH"],
+    estimatedLift: "GPU tier for real-time distribution matching. Approximate CPU version possible post-First Blood.",
+    addedAt: "2026-03-26T00:00:00.000Z",
+    deployedAt: null,
+    deployedWeaponId: null,
+  },
+  {
+    id: "WD-033",
+    title: "Klingon V3 — Posture Library (GHOSTHOOD Tactical Sig-Shift)",
+    origin: "Spark #005 — Adaptive Camouflage — GHOSTHOOD/ex-SF CEO lens (Grok, 2026-03-26). SPARK-005.",
+    concept: "Pre-computed library of validated stealth configurations ('postures') indexed by rival sensor type. When Ghost Sim detects rivals tightening on a specific statistical band, the bot hot-swaps to a pre-validated alternate posture — venue fragmentation, correlation injection, timing shift — in microseconds. No unnecessary movement: only the minimal shift required. GHOSTHOOD doctrine: field-proven ex-SF adaptive concealment, shape-shift faster than the adversary can track.",
+    blocker: "Requires accumulated Sentry + Ghost Sim operational data to build validated posture profiles. Post-First Blood.",
+    prerequisites: ["Klingon Cloaking V2.1 (8842)", "Ghost Simulator (8847)", "Sentry V2 (8846)", "Operational Sentry data corpus"],
+    priority: "HIGH",
+    status: "BACKLOG",
+    deploymentClasses: ["STEALTH"],
+    estimatedLift: "Post-First Blood + 2-4 weeks Sentry operational data to profile rival sensor types.",
+    addedAt: "2026-03-26T00:00:00.000Z",
+    deployedAt: null,
+    deployedWeaponId: null,
+  },
+  {
+    id: "WD-034",
+    title: "Stealth Conductor — Multi-Band Signature Orchestrator (Miranda Sig-Shroud)",
+    origin: "Spark #005 — Adaptive Camouflage — Miranda Military lens (Grok, 2026-03-26). SPARK-005.",
+    concept: "Unified orchestration layer that coordinates ALL stealth services simultaneously. Currently stealth is fragmented: Klingon (timing/identity), Sig-Nullifier (monitoring), GhostBat (formations), Phantom Pulse (entropy injection) all operate independently. Miranda Sig-Shroud suppresses every detectable band (price-impact, entropy spike, venue-correlation echo, cross-asset leakage, timing regularity, size distribution, routing pattern) simultaneously via multi-objective optimisation. The missing conductor for the stealth orchestra. Miranda Military doctrine: UV-to-radar full-spectrum signature control for dismounted soldiers.",
+    blocker: "Multi-objective optimiser integration (OR-Tools or Gurobi). Requires stealth parameter APIs exposed by Klingon, GhostBat, Phantom Pulse, Sig-Nullifier.",
+    prerequisites: ["Klingon Cloaking V2.1 (8842)", "Sig-Nullifier (8852)", "GhostBat Wingman (8853)", "Phantom Pulse (8854)", "OR-Tools or Gurobi"],
+    priority: "HIGH",
+    status: "BACKLOG",
+    deploymentClasses: ["STEALTH", "INTEL"],
+    estimatedLift: "OR-Tools integration (free) + stealth parameter API standardisation across services.",
+    addedAt: "2026-03-26T00:00:00.000Z",
+    deployedAt: null,
+    deployedWeaponId: null,
+  },
+
   // ── Spark #004 — Wargames Doctrine (Commander + Perplexity + Grok) ──
   {
     id: "WD-029",
@@ -490,7 +537,7 @@ const SEED_ENTRIES: Omit<BacklogEntry, "lastCheckedAt">[] = [
 
 export class BacklogService {
   private entries: Map<string, BacklogEntry> = new Map();
-  private entryCounter = 31; // Start after WD-031
+  private entryCounter = 34; // Start after WD-034
   private lastScanAt: string | null = null;
 
   constructor() {
