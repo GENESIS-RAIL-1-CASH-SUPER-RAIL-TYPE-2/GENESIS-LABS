@@ -392,11 +392,58 @@ const SEED_ENTRIES: Omit<BacklogEntry, "lastCheckedAt">[] = [
     deployedAt: null,
     deployedWeaponId: null,
   },
+  // --- Spark #003 — Anduril + Simons (Gemini AI, 2026-03-26) ---
+  // 1 BUILD NOW → DEPLOYED, 2 BACKLOG
+  {
+    id: "WD-026",
+    title: "Regime Detector — 3-State HMM Market Classification (Anduril/Simons SF)",
+    origin: "Spark #003 — Gemini AI, Anduril (Palmer Luckey) + Jim Simons lens (2026-03-26). SPARK-003.",
+    concept: "3-state Hidden Markov Model regime detector. Market switches between TRENDING, MEAN_REVERTING, and CHAOTIC regimes. Each state produces different advisories for spread filters, clip sizes, aggressiveness, and stealth levels. Bayesian transition matrix learns from observed regime changes. Simons doctrine: detect the regime transition BEFORE the noise settles.",
+    blocker: "CLEARED — Built as GENESIS-REGIME-DETECTOR (port 8855). Polls Arb Detector for spread data → feature extraction → Bayesian HMM classification → advisory broadcast to FTS, TPO, Arb, Sig-Nullifier, CIA, Whiteboard.",
+    prerequisites: ["Arb Detector (8750)", "Follow the Sun (8815)", "TPO (8848)"],
+    priority: "HIGH",
+    status: "DEPLOYED",
+    deploymentClasses: ["INTEL", "RECON"],
+    estimatedLift: "Pure software — simplified 3-state HMM from spread distribution.",
+    addedAt: "2026-03-26T00:00:00.000Z",
+    deployedAt: "2026-03-26T00:00:00.000Z",
+    deployedWeaponId: "GENESIS-REGIME-DETECTOR",
+  },
+  {
+    id: "WD-027",
+    title: "Fluid-Dynamic Orderbook Model (Anduril Galactic)",
+    origin: "Spark #003 — Gemini AI, Anduril (Palmer Luckey) lens (2026-03-26). SPARK-003.",
+    concept: "Treat the order book as a continuous fluid dynamics problem — flow, pressure, viscosity. Model liquidity as continuous fluid. Where is pressure building? Where will it flow next? Maps to Warp Simulation Spec (8795) but with Navier-Stokes mathematical framework instead of discrete levels.",
+    blocker: "Requires GPU Phase 2 for real-time fluid simulation of order book dynamics.",
+    prerequisites: ["NVIDIA Phase 2B", "Warp Simulation Spec (8795)", "L2/L3 order book feeds"],
+    priority: "MEDIUM",
+    status: "BACKLOG",
+    deploymentClasses: ["INTEL", "RECON"],
+    estimatedLift: "GPU tier + L2/L3 order book data + fluid dynamics solver.",
+    addedAt: "2026-03-26T00:00:00.000Z",
+    deployedAt: null,
+    deployedWeaponId: null,
+  },
+  {
+    id: "WD-028",
+    title: "Federated Operator Learning Loop (Simons Galactic)",
+    origin: "Spark #003 — Gemini AI, Jim Simons lens (2026-03-26). SPARK-003.",
+    concept: "GTC telemetry → Academy operator profile updates in real-time. Each operator's mission results feed back to refine the NEXT operator's parameters via federated learning. Academy trains profiles without exposing strategy centrally. Closes the feedback loop between execution outcomes and operator behaviour.",
+    blocker: "Requires accumulated operational data corpus (same constraint as WD-008). Academy needs live result ingestion pipeline.",
+    prerequisites: ["GTC (8600)", "Academy (8730)", "Mirror Feed (8850)", "3-6 months operational data"],
+    priority: "MEDIUM",
+    status: "BACKLOG",
+    deploymentClasses: ["INTEL", "SUPPORT"],
+    estimatedLift: "Post-First Blood + operational data + Academy V2 with result ingestion.",
+    addedAt: "2026-03-26T00:00:00.000Z",
+    deployedAt: null,
+    deployedWeaponId: null,
+  },
 ];
 
 export class BacklogService {
   private entries: Map<string, BacklogEntry> = new Map();
-  private entryCounter = 25; // Start after WD-025
+  private entryCounter = 28; // Start after WD-028
   private lastScanAt: string | null = null;
 
   constructor() {
