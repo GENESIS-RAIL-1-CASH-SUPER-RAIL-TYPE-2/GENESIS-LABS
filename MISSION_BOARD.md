@@ -2,7 +2,7 @@
 
 > **Last Updated**: 2026-03-26
 > **Status**: OPERATIONAL — 4 perpetual loops active
-> **Under**: DARPA command
+> **Under**: DARPA command + ARIS autonomous forge missions
 > **Doctrine**: "Their apple, our X. We NEVER copy." (Zero Copy Gate)
 
 ---
