@@ -487,6 +487,54 @@ const SEED_ENTRIES: Omit<BacklogEntry, "lastCheckedAt">[] = [
     deployedWeaponId: null,
   },
 
+  // ── Spark #007 — GCHQ SIGINT Lens (Grok, 2026-03-26) ──
+  // 0 BUILD NOW (build freeze), 3 BACKLOG — first post-First Blood build candidates
+  {
+    id: "WD-035",
+    title: "Latency Resonance Decoder — Cross-Venue Propagation SIGINT",
+    origin: "Spark #007 — GCHQ lens (Grok, 2026-03-26). SPARK-007.",
+    concept: "Cross-venue timestamp matrix tracking pairwise latency deltas across all 2,034+ feeds. When propagation delay deviates >3σ from rolling baseline AND coincides with strategic run detection (Hasbrouck-Saar linked message chain via FSM), flags resonance event. Exploit: place genuine fragmented limit orders on slower venue before faster venue's update propagates — pure liquidity provision. Academic basis: Aquilina et al. (QJE 2022) — latency races occur every minute per symbol, account for 20-44% of volume.",
+    blocker: "Build freeze until First Blood. Phase 0 TypeScript buildable — pairwise timestamp deltas are pure maths on existing feed data.",
+    prerequisites: ["All CEX Ingestors (2,034 feeds)", "Ingestion Gate (8700)", "Arb Detector (8750)", "Regime Detector (8855)"],
+    priority: "HIGH",
+    status: "BACKLOG",
+    deploymentClasses: ["RECON", "STRIKE"],
+    estimatedLift: "Post-First Blood. Phase 0 TypeScript — no GPU, no external deps.",
+    addedAt: "2026-03-26T00:00:00.000Z",
+    deployedAt: null,
+    deployedWeaponId: null,
+  },
+  {
+    id: "WD-036",
+    title: "Toxicity Oracle — VPIN Flow Toxicity Predictor",
+    origin: "Spark #007 — GCHQ lens (Grok, 2026-03-26). SPARK-007.",
+    concept: "Volume-Synchronized Probability of Informed Trading (VPIN) computed across all feeds using volume-clock bucketing (not wall-clock). When VPIN spikes >0.85 (90th percentile) AND quote-clustering autocorrelation exceeds 0.6 at 50-200ms lags, declares toxic flow. Feeds pre-emptive Kelly adjustment: widen spreads or reduce size in toxic instruments, route genuine liquidity to correlated non-toxic instruments. Academic basis: Easley, López de Prado & O'Hara (2012) — VPIN predicts flash-crash precursors on public tape.",
+    blocker: "Build freeze until First Blood. Phase 0 TypeScript buildable — VPIN is arithmetic on signed trade volume, volume-clocking is simple bucketing.",
+    prerequisites: ["All CEX Ingestors (signed trade feeds)", "Regime Detector (8855)", "Adaptive Calibrator (8760)", "TPO (8848)"],
+    priority: "HIGH",
+    status: "BACKLOG",
+    deploymentClasses: ["INTEL", "DEFENCE"],
+    estimatedLift: "Post-First Blood. Phase 0 TypeScript — no GPU, no external deps.",
+    addedAt: "2026-03-26T00:00:00.000Z",
+    deployedAt: null,
+    deployedWeaponId: null,
+  },
+  {
+    id: "WD-037",
+    title: "Behavioural Cartographer — Multi-Dimensional Rival Fingerprinting",
+    origin: "Spark #007 — GCHQ lens (Grok, 2026-03-26). SPARK-007.",
+    concept: "Extends Sentry V2 with new observation dimensions: amendment cadence, on-chain deposit/withdrawal timing patterns, quote-skew persistence, dark-pool echo correlation. Per-participant HMM (Phase 0: threshold-based anomaly detector, Phase 2: full HMM). When behavioural fingerprint deviates >4σ from learned baseline, flags regime shift. Routes genuine orders to venues/timings where adversary tells predict reduced competition. Academic basis: Hasbrouck & Saar (2013) strategic runs, van Kervel et al. (2017) inventory skew signalling, Aquilina et al. (2023) dark-pool stale pricing.",
+    blocker: "Build freeze until First Blood. Phase 0: threshold-based anomaly detection on amendment cadence + quote-skew. Phase 2: full per-participant HMM.",
+    prerequisites: ["Sentry V2 (8846)", "All CEX Ingestors (amendment/cancel feeds)", "CIA (8797)", "Whiteboard (8710)"],
+    priority: "HIGH",
+    status: "BACKLOG",
+    deploymentClasses: ["RECON", "INTEL"],
+    estimatedLift: "Post-First Blood. Phase 0 threshold detector buildable. Full HMM requires GPU Phase 2.",
+    addedAt: "2026-03-26T00:00:00.000Z",
+    deployedAt: null,
+    deployedWeaponId: null,
+  },
+
   // ── Spark #004 — Wargames Doctrine (Commander + Perplexity + Grok) ──
   {
     id: "WD-029",
@@ -537,7 +585,7 @@ const SEED_ENTRIES: Omit<BacklogEntry, "lastCheckedAt">[] = [
 
 export class BacklogService {
   private entries: Map<string, BacklogEntry> = new Map();
-  private entryCounter = 34; // Start after WD-034
+  private entryCounter = 37; // Start after WD-037
   private lastScanAt: string | null = null;
 
   constructor() {
