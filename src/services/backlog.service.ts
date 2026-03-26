@@ -439,11 +439,58 @@ const SEED_ENTRIES: Omit<BacklogEntry, "lastCheckedAt">[] = [
     deployedAt: null,
     deployedWeaponId: null,
   },
+
+  // ── Spark #004 — Wargames Doctrine (Commander + Perplexity + Grok) ──
+  {
+    id: "WD-029",
+    title: "Phantom Forge Wargame Engine",
+    origin: "Spark #004 — Wargames Doctrine (Commander + Perplexity + Grok, 2026-03-26). SPARK-004.",
+    concept: "Sovereign in-house wargame engine. 4 capabilities: scenario builder (stress tests + live context), Phase 0 CPU agent-based simulation (operator vs rival agents), causal self-play (sovereign graph vs mirage graph via Ontology Weaver), shadow pipeline (TPO decision cloning, zero real capital). CIA→DARPA→Skunkworks access. Decentralised GPU backends in Phase 2.",
+    blocker: "None — Phase 0 TypeScript is zero-dependency.",
+    prerequisites: ["Regime Detector (8855)", "Sentry (8846)", "Ontology Weaver (8849)", "Ghost Simulator (8847)", "TPO (8848)", "Academy (8730)"],
+    priority: "HIGH",
+    status: "DEPLOYED",
+    deploymentClasses: ["INTEL", "RECON"],
+    estimatedLift: "Phase 0 LIVE. Phase 2 GPU requires T4 minimum.",
+    addedAt: "2026-03-26T00:00:00.000Z",
+    deployedAt: "2026-03-26T00:00:00.000Z",
+    deployedWeaponId: "GENESIS-PHANTOM-FORGE (port 8856)",
+  },
+  {
+    id: "WD-030",
+    title: "Phantom Forge GPU Backend (NVIDIA Warp + JAX)",
+    origin: "Spark #004 — Wargames Doctrine (2026-03-26). SPARK-004.",
+    concept: "GPU-accelerated simulation backends for Phantom Forge. NVIDIA Warp (80% primary), JAX/Google (15% hedge), PettingZoo + RLlib (5% RL training). Decentralised — no single vendor dependency.",
+    blocker: "GPU Phase 2 (T4 minimum ~£50/mo). NVIDIA Warp requires CUDA.",
+    prerequisites: ["Phantom Forge (8856)", "NVIDIA T4 GPU instance", "Python runtime for Warp/JAX"],
+    priority: "MEDIUM",
+    status: "BACKLOG",
+    deploymentClasses: ["INTEL", "RECON"],
+    estimatedLift: "GPU Phase 2 budget approval + Python service bridge.",
+    addedAt: "2026-03-26T00:00:00.000Z",
+    deployedAt: null,
+    deployedWeaponId: null,
+  },
+  {
+    id: "WD-031",
+    title: "Federated Wargame Mesh",
+    origin: "Spark #004 — Wargames Doctrine (2026-03-26). SPARK-004.",
+    concept: "Multiple Phantom Forge instances running simultaneously across different market segments. Federated operator training, cross-instance scenario sharing.",
+    blocker: "Post-revenue + multiple compute instances + Phantom Forge GPU maturity.",
+    prerequisites: ["Phantom Forge (8856)", "WD-030 GPU Backend", "Multiple compute instances"],
+    priority: "LOW",
+    status: "BACKLOG",
+    deploymentClasses: ["INTEL", "SUPPORT"],
+    estimatedLift: "Post-revenue scale + WD-030 operational.",
+    addedAt: "2026-03-26T00:00:00.000Z",
+    deployedAt: null,
+    deployedWeaponId: null,
+  },
 ];
 
 export class BacklogService {
   private entries: Map<string, BacklogEntry> = new Map();
-  private entryCounter = 28; // Start after WD-028
+  private entryCounter = 31; // Start after WD-031
   private lastScanAt: string | null = null;
 
   constructor() {
